@@ -1,0 +1,58 @@
+# Scaling Up the Infrastructure
+
+## User Access Flow
+- The user enters www.foobar.com in their browser.
+- The DNS query returns the IP address of the load balancer.
+- The user's browser establishes a connection with the load balancer.
+- The load balancer (HAproxy), configured as part of a cluster, distributes incoming requests among multiple web servers.
+- The web server (Nginx) handles static content requests and, if necessary, forwards them to the application server for dynamic content processing.
+- The application server interacts with the MySQL database to query or modify the required data.
+- The results are sent back to the web server, which sends the final response to the user through the load balancer.
+
+# Infrastructure Components
+
+## Servers (4 Servers)
+- The infrastructure now includes an additional server, allowing the system components to be split across different servers for optimized performance. This includes:
+
+- Web server (Nginx)
+- Application server
+- Database server (MySQL)
+- New server to add capacity
+
+## Load Balancer (HAproxy, Cluster)
+- The load balancer is configured as part of a cluster with a second load balancer to better handle traffic and distribute requests among available servers. This increases redundancy and ensures higher availability.
+
+## Web Server (Nginx)
+- The web server handles static files (such as images, stylesheets, etc.) and acts as an intermediary for requests requiring dynamic processing, which are sent to the application server.
+
+## Application Server
+- The application server processes the application's logic, manages user interactions, and communicates with the database to perform read and write operations.
+
+## Database (MySQL)
+- The database server stores the website's information, managing the read and write requests from the application server.
+
+# Infrastructure Diagram in Mermaid
+
+
+# Explanation of Each Added Element
+
+## New Server
+- An additional server is added to facilitate the separation of components (web server, application server, and database), improving the overall system performance by reducing resource competition.
+
+## Load Balancer Cluster (HAproxy)
+- By configuring the load balancers in a cluster, redundancy is increased, and the capacity to handle more incoming traffic is improved. If one load balancer fails, the other can continue functioning, ensuring higher availability.
+
+## Separation of Components
+- Dividing components across different servers optimizes performance. For example, the application server does not compete for resources with the database server, reducing latency and improving response times.
+
+# Potential Issues with This Infrastructure
+
+## Single Point of Failure
+- Although more servers and load balancers have been added, it is crucial to constantly monitor the load balancers to avoid relying on a single critical layer.
+
+## Lack of Monitoring and Additional Security
+- This configuration lacks monitoring tools, firewalls, or encrypted traffic (HTTPS). Adding these elements would be essential for a robust and secure infrastructure.
+
+## Load Balancing
+- While the load balancer cluster improves traffic distribution, it would be advisable to review the algorithm being used (e.g., "round-robin" or "least connections") to ensure traffic is distributed evenly.
+
