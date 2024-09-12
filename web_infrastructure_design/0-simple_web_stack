@@ -1,0 +1,50 @@
+# Simple Web Infrastructure
+
+## User Access Flow
+
+- The user enters www.foobar.com in their browser's address bar.
+- The user's computer sends a DNS query to obtain the IP address associated with www.foobar.com.
+- The DNS server responds with the IP address 8.8.8.8, which is linked to www.foobar.com.
+- The user's browser makes an HTTP request to IP 8.8.8.8.
+- The web server (Nginx) on the server receives the request.
+- Nginx processes the request and, if necessary, forwards it to the application server.
+- The application server executes the necessary operations and may interact with the MySQL database.
+- The server returns an HTTP response to the user's browser.
+- The browser displays the received web page to the user.
+
+## Infrastructure Components
+
+## Server (IP: 8.8.8.8)
+- A server is a computer system that offers resources, services, or applications to other devices, known as clients. In this case, the server hosts all the components of the website.
+
+## Domain Name (foobar.com)
+- The domain name is a human-readable address used to access websites. The www record in www.foobar.com is typically a CNAME record that points to the domain’s A record, which contains the server’s IP address.
+
+## Web Server (Nginx)
+- The web server is responsible for handling incoming HTTP requests. It serves static files and acts as a reverse proxy, forwarding dynamic content requests to the application server.
+
+## Application Server
+- The application server executes the website’s business logic, processes dynamic requests, and manages interactions with the database.
+
+## Application Files
+- These are the files that contain the web application’s code, which can be written in languages like PHP, Python, or any other.
+
+## Database (MySQL)
+- The database is responsible for storing and managing the website’s data, such as user information, content, transactions, and more.
+
+## Communication Protocol
+- The server communicates with the user’s computer via the HTTP (Hypertext Transfer Protocol), which allows the transmission of web data.
+
+# Infrastructure Diagram in Mermaid
+https://www.mermaidchart.com/raw/21798d47-8843-43c6-abfd-17bfcd0e584f?theme=light&version=v0.1&format=svg
+
+# Issues with This Infrastructure
+
+## Single Point of Failure (SPOF)
+- All components are concentrated on a single server. If the server fails, the website will become unavailable.
+
+## Maintenance Downtime
+- If the server needs to be restarted for maintenance or updates (such as deploying new code), the website will become temporarily inaccessible.
+
+## Limited Scalability
+- This infrastructure cannot handle a high volume of traffic since there is no load balancing system or multiple servers to distribute the demand.
