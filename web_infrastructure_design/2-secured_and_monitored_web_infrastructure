@@ -1,0 +1,56 @@
+# Secured and Monitored Web Infrastructure
+
+# User Access Flow
+- The user enters www.foobar.com in their browser.
+- The browser sends a DNS query to resolve the domain’s IP address.
+- The DNS server returns the IP address of the load balancer (HAproxy).
+- The user’s browser establishes an HTTPS connection with the load balancer using the SSL certificate.
+- The load balancer distributes the request among the available web servers.
+- The web server (Nginx) receives the request, processes static content, and, if necessary, forwards it to the application server to handle business logic.
+- The application server queries the necessary data from the MySQL database and sends the results back to the web server.
+- The web server sends the final response to the load balancer, which returns it to the user through the secure HTTPS connection.
+
+# Infrastructure Components
+
+## Servers (3 Servers)
+- This infrastructure consists of three servers: one web server, one application server, and one database server. Each server is isolated behind a firewall to improve security.
+
+## Load Balancer (HAproxy)
+- The load balancer distributes requests among available servers, allowing for better traffic management and preventing a single server from being overloaded. The HTTPS connection is established here using an SSL certificate.
+
+## SSL Certificate
+- The SSL certificate is used to encrypt traffic between the user’s browser and the server. This ensures that the information exchanged between the user and the server is protected.
+
+## Firewalls (3 Firewalls)
+- Each server is protected by a firewall that filters incoming and outgoing traffic, preventing unauthorized access. Firewalls help prevent network attacks by controlling which ports and services are accessible.
+
+## Monitoring System (Sumologic or similar)
+- Monitoring clients are implemented on each server to collect data on performance, resource usage, and potential failures. This allows administrators to quickly identify issues and take corrective action.
+
+# Infrastructure Diagram in Mermaid
+
+# Explanation of Each Added Element
+
+## Firewalls (3 Firewalls)
+- Firewalls are added to protect each server. They ensure that only legitimate traffic reaches the web, application, and database servers. Each firewall acts as a barrier to filter unauthorized access.
+
+## SSL Certificate
+- An SSL certificate is added to encrypt traffic between the server and the client, providing additional security and ensuring data privacy. HTTPS is essential for protecting passwords, personal data, and other sensitive information.
+
+## Monitoring (Sumologic or similar)
+- Monitoring tools are added to detect performance issues, server failures, or unusual behavior. Monitoring also helps visualize metrics like the web server's requests per second (QPS).
+
+## QPS Monitoring (Queries Per Second)
+- To monitor the web server's QPS, the monitoring client collects data from the server and transmits it to the central monitoring system (Sumologic), where graphs can be analyzed and alerts set up to prevent overloads.
+
+# Potential Issues with This Infrastructure
+
+## SSL Termination at the Load Balancer
+- Terminating the SSL connection at the load balancer means that communication between the load balancer and internal servers is not encrypted. This can be a security risk as data is in plain text within the internal network.
+
+## Single Write-Only MySQL Node
+- Having only one MySQL server to accept write operations can become a bottleneck. If this server fails, no more write operations can be performed, which could cause a loss of functionality for the site.
+
+## Servers with the Same Components
+- If all servers have the same components (e.g., web server, application server, and database on the same server), there could be resource competition, affecting performance. Separating server roles improves responsiveness and scalability.
+
