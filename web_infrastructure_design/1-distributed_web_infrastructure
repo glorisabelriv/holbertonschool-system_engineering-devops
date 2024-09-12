@@ -1,0 +1,62 @@
+# Distributed Web Infrastructure
+
+# User Access Flow
+- The user enters www.foobar.com in their browser.
+- The user's computer sends a DNS query to resolve the IP address associated with www.foobar.com.
+- The DNS server responds with the IP address of the load balancer (HAproxy).
+- The user's browser sends an HTTP request to the load balancer's IP address.
+- The load balancer receives the request and, based on its distribution algorithm, decides which web server (Nginx) to forward the request to.
+- The web server processes the request and, if needed, forwards it to the application server.
+- The application server handles the business logic and queries the necessary data from the MySQL database.
+- The web server sends the final response back to the load balancer, which forwards it to the user's browser.
+- The browser renders the requested web page.
+
+# Infrastructure Components
+## Servers (3 Servers)
+- The infrastructure includes three servers: one for the web server, another for the application server, and one more for the database. This design distributes the functions to improve system performance and responsiveness.
+
+## Load Balancer (HAproxy)
+- The load balancer (HAproxy) distributes incoming requests across multiple web or application servers based on a distribution algorithm, preventing any single server from being overloaded.
+
+- Distribution Algorithm: HAproxy can use several algorithms, such as "round-robin" (equally distributing requests among available servers) or "least connections" (sending requests to the server with the fewest active connections).
+
+- Active-Active vs. Active-Passive Setup:
+
+- Active-Active: In this configuration, all servers are active and handle requests simultaneously, allowing for more efficient use of resources.
+- Active-Passive: In this configuration, one server handles traffic while the other remains on standby. If the primary server fails, the backup server takes over.
+
+## Web Server (Nginx)
+- The web server handles HTTP requests and serves static content. It also acts as an intermediary between the user and the application server for dynamic requests.
+
+## Application Server
+- The application server processes business logic and handles dynamic interactions with the database.
+
+## Database (MySQL)
+- The database stores and manages website data, such as user information and transactions. The configuration can use a Primary-Replica (Master-Slave) database cluster, where:
+
+- Primary Node: Accepts writes and updates.
+- Replica Node: Accepts read-only requests and synchronizes with the primary node.
+
+# Infrastructure Diagram in Mermaid
+
+
+# Explanation of Each Added Element
+
+## Load Balancer (HAproxy)
+- The load balancer efficiently distributes requests among web and application servers, helping prevent overload on any single server.
+
+## Separation of Servers
+- Separating functions into dedicated servers (web, application, and database) improves performance and allows each component to be scaled individually based on traffic needs.
+
+## Primary-Replica Cluster
+- Using a Primary-Replica database cluster ensures that read and write requests are handled efficiently. The primary node handles all write operations, while the replica node manages read requests, improving performance and redundancy.
+
+# Potential Issues with This Infrastructure
+## Single Points of Failure (SPOF)
+- Although there are multiple servers, the load balancer remains a single point of failure. If it fails, requests cannot be processed, even if other servers are operational.
+
+## Security Issues
+- This configuration does not include a firewall or an SSL certificate for HTTPS, leaving the infrastructure vulnerable to attacks and compromising the security of the traffic.
+
+## Lack of Monitoring
+- There is no monitoring system configured to track server performance, resource usage, or possible failures, which is essential in a distributed infrastructure.
